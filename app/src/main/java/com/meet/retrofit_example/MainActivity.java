@@ -17,12 +17,13 @@ public class MainActivity extends AppCompatActivity {
 
     private CustomAdapter adapter;
     private RecyclerView recyclerView;
-
+    private List<RetroPhoto> contacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        recyclerView=findViewById(R.id.recycle);
 
 
         GetDataService service=RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
@@ -31,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<RetroPhoto>> call, Response<List<RetroPhoto>> response) {
 
-                if(response==null){
-                    Toast.makeText(MainActivity.this, "nooo...", Toast.LENGTH_SHORT).show();
-                }else {
-                    generateDatalist(response.body());
+               contacts=response.body();
+                adapter=new CustomAdapter(contacts,MainActivity.this);
+                RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(MainActivity.this);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(adapter);
 
-                }
 
             }
 
@@ -54,11 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void generateDatalist(List<RetroPhoto> photoList) {
 
-        recyclerView=findViewById(R.id.recycle);
-        adapter=new CustomAdapter(photoList,MainActivity.this);
-        RecyclerView.LayoutManager layoutManager=new LinearLayoutManager(MainActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
 
 
     }
